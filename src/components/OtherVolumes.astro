@@ -1,0 +1,41 @@
+---
+import BookIcon from "./icons/book.astro";
+const { volume } = Astro.props;
+
+import { getDirectusClient } from "../utils/get-directus-client.js";
+import { readItems } from "@directus/sdk";
+
+const directus = await getDirectusClient();
+let volumes = await directus.request(
+  readItems("Volumes", {
+    fields: ["slug", "title", "number", "published_at"],
+    sort: ["-id"],
+    filter: {
+      site_id: {
+        _eq: "1",
+      },
+    },
+  }),
+);
+volumes && (volumes = volumes.filter((v) => v.slug !== volume.slug));
+---
+
+<div class="">
+  {
+    volumes &&
+      volumes.map((volume) => (
+        <div class="flex  items-center">
+          <BookIcon />
+          <h2 class="text-xl my-1">
+            <a href={`/volumes/${volume.slug}`}>{volume.title}</a>
+          </h2>
+        </div>
+      ))
+  }
+</div>
+
+<style>
+  li a:hover {
+    color: rgba(var(--accent-dark));
+  }
+</style>
