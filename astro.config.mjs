@@ -9,7 +9,7 @@ import vercel from "@astrojs/vercel/serverless";
 export default defineConfig({
   integrations: [vue(), tailwind()],
   server: { port: 4321, host: true },
-  output: "hybrid",
+  output: "server",
   adapter: vercel(),
   vite: {
     ssr: {
